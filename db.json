@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "email": "yt@rgdfg",
+      "password": "tyurytyrty456",
+      "date": 1700694025960,
+      "id": 1
+    },
+    {
+      "email": "alexeydomut@gmail.com",
+      "password": "ёёёёёёёё",
+      "date": 1700765357091,
+      "id": 2
+    }
+  ]
+}

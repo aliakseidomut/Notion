@@ -19,15 +19,4 @@ export default class Api {
             })
         })
     }
-
-    static async isUserExist(email) {
-        try {
-          const response = await fetch(`http://localhost:3000/users?email=${email}`);
-          const data = await response.json();
-          return data.length > 0; // Возвращает true, если пользователь существует, иначе false
-        } catch (error) {
-          console.error(error);
-          return false; // В случае ошибки также возвращаем false
-        }
-      }
 }

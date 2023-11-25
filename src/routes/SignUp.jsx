@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { User } from "../utils/validation";
 import Api from "../utils/api";
 import { z } from "zod";
@@ -9,22 +9,27 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
 
-  const [errors, setErrors] = useState(null);
+  const [zodErrors, setZodErrors] = useState(null);
   const [isPasswordsEquals, setIsPasswordsEquals] = useState(true);
+  const [isUserExist, setIsUserExist] = useState(false);
 
+  useEffect(() => {
+    setIsUserExist(false);
+  }, [email]);
   
 
   function handleSignUp() {
-    if(Api.isUserExist(email)){
-      console.log(Api.isUserExist(email))
-    } else {
-      console.log("Net")
-    }
-
     try {
-      const user = User.parse({email, password, date: Date.now()});
+      fetch(`http://localhost:3000/users?email=${email}`)
+        .then(r => r.json())
+        .then(users => {
+          if(users.length > 0){
+            setIsUserExist(true);
+            throw new Error("");
+          }
+      })
       
-
+      const user = User.parse({email, password, date: Date.now()});
 
       if (password !== repeatPassword) {
         setIsPasswordsEquals(false);
@@ -33,13 +38,12 @@ export default function SignUp() {
       
       Api.createUser(user);
       
+      setIsUserExist(false);
       setIsPasswordsEquals(true);
-      setErrors(null);
+      setZodErrors(null);
     } catch(err) {
       if (err instanceof z.ZodError) {
-        setErrors(err.format());
-      } else {
-        setErrors(err);
+        setZodErrors(err.format());
       }
     }
   }
@@ -56,7 +60,8 @@ export default function SignUp() {
           placeholder="Email" 
           onChange={(e) => setEmail(e.target.value)}
         />
-        {errors?.email && <h3>Введите правильный email</h3>}
+        {zodErrors?.email && <h3 className="font-medium text-red-600">Введите правильный email</h3>}
+        {isUserExist && <h3 className="font-medium text-red-600">Пользователь с таким email уже существует</h3>}
         
         <input 
           className="pl-1 h-10 border-solid border-black border-2" 
@@ -64,14 +69,14 @@ export default function SignUp() {
           placeholder="Password" 
           onChange={(e) => setPassword(e.target.value)}
         />
-        {errors?.password && <h3>Введите правильный пароль</h3>}
+        {zodErrors?.password && <h3 className="font-medium text-red-600">{"Пароль не надежен (Длина пароля >= 8 символам;\nПароль содержит хотя бы одну заглавную букву;\nПароль содержит хотя бы одну строчную букву;\nПароль содержит хотя бы одну цифру.)"}</h3>}
         
         <input 
           className="pl-1 h-10 border-solid border-black border-2" 
           type="password" placeholder="Repeat password" 
           onChange={(e) => setRepeatPassword(e.target.value)}
         />
-        {!isPasswordsEquals && <h3>Пароли отличаются</h3>}
+        {!isPasswordsEquals && <h3 className="font-medium text-red-600">Пароли отличаются</h3>}
         
         <button className="h-10 border-solid border-black border-2 hover:bg-slate-300" onClick={handleSignUp}>Sign up</button>
   

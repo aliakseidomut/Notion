@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { User } from "../utils/validation";
 import Api from "../utils/api";
 import { z } from "zod";
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -13,35 +13,34 @@ export default function SignUp() {
   const [isPasswordsEquals, setIsPasswordsEquals] = useState(true);
   const [isUserExist, setIsUserExist] = useState(false);
 
-  useEffect(() => {
-    setIsUserExist(false);
-  }, [email]);
-  
+  const navigate = useNavigate();
 
-  function handleSignUp() {
+  async function handleSignUp() {
     try {
-      fetch(`http://localhost:3000/users?email=${email}`)
-        .then(r => r.json())
-        .then(users => {
-          if(users.length > 0){
-            setIsUserExist(true);
-            throw new Error("");
-          }
-      })
+      const user = User.parse({ email, password, date: Date.now() });
+      setZodErrors(null);
+
+      const response = await fetch(`http://localhost:3000/users?email=${email}`);
+      const users = await response.json();
       
-      const user = User.parse({email, password, date: Date.now()});
+      if (users.length > 0) {
+        setIsUserExist(true);
+        throw new Error('Пользователь с таким email уже существует');
+      } else {
+        setIsUserExist(false);
+      }
 
       if (password !== repeatPassword) {
         setIsPasswordsEquals(false);
-        throw new Error("");
+        throw new Error('Пароли не совпадают')
+      } else {
+        setIsPasswordsEquals(true);
       }
-      
+  
       Api.createUser(user);
-      
-      setIsUserExist(false);
-      setIsPasswordsEquals(true);
-      setZodErrors(null);
-    } catch(err) {
+
+      navigate('/login');
+    } catch (err) {
       if (err instanceof z.ZodError) {
         setZodErrors(err.format());
       }
@@ -60,7 +59,7 @@ export default function SignUp() {
           placeholder="Email" 
           onChange={(e) => setEmail(e.target.value)}
         />
-        {zodErrors?.email && <h3 className="font-medium text-red-600">Введите правильный email</h3>}
+        {zodErrors?.email && <h3 className="font-medium text-red-600">{zodErrors?.email?._errors}</h3>}
         {isUserExist && <h3 className="font-medium text-red-600">Пользователь с таким email уже существует</h3>}
         
         <input 
@@ -69,14 +68,14 @@ export default function SignUp() {
           placeholder="Password" 
           onChange={(e) => setPassword(e.target.value)}
         />
-        {zodErrors?.password && <h3 className="font-medium text-red-600">{"Пароль не надежен (Длина пароля >= 8 символам;\nПароль содержит хотя бы одну заглавную букву;\nПароль содержит хотя бы одну строчную букву;\nПароль содержит хотя бы одну цифру.)"}</h3>}
+        {zodErrors?.password && <h3 className="font-medium text-red-600">{zodErrors?.password?._errors}</h3>}
         
         <input 
           className="pl-1 h-10 border-solid border-black border-2" 
           type="password" placeholder="Repeat password" 
           onChange={(e) => setRepeatPassword(e.target.value)}
         />
-        {!isPasswordsEquals && <h3 className="font-medium text-red-600">Пароли отличаются</h3>}
+        {!isPasswordsEquals && <h3 className="font-medium text-red-600">Пароли не совпадают</h3>}
         
         <button className="h-10 border-solid border-black border-2 hover:bg-slate-300" onClick={handleSignUp}>Sign up</button>
   

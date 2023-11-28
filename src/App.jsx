@@ -7,6 +7,8 @@ import EditNote from "./routes/EditNote";
 import Note from "./routes/Note";
 import SignUp from "./routes/SignUp";
 import LogIn from "./routes/LogIn";
+import UserContextProvider from "./components/UserContextProvider";
+import RequireAuth from "./components/RequireAuth";
 
 const router = createBrowserRouter([
   {
@@ -23,7 +25,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/home',
-        element: <Home />
+        element: (
+          <RequireAuth>
+            <Home />
+          </RequireAuth>
+        )
       },
       {
         path: '/notes',
@@ -46,7 +52,11 @@ const router = createBrowserRouter([
 ])
 
 function App() {
-  return <RouterProvider router={router} />;
+  return(
+    <UserContextProvider>
+      <RouterProvider router={router} />
+    </UserContextProvider>
+  ) 
 }
 
 export default App;

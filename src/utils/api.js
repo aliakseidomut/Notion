@@ -1,5 +1,5 @@
 export default class Api {
-    static getUserPromise(email, password) {
+    static getUserPromise({email, password}) {
         const query = new URLSearchParams({email,password}).toString();
         return fetch(`http://localhost:3000/users?${query}`)
             .then(r => r.json())

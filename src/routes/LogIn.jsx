@@ -20,7 +20,7 @@ const userContext = useContext(UserContext);
 
 function handleLogIn() {
     try {
-      const user = User.parse({ email, password, date: Date.now() });
+      const user = User.parse({ email, password, createdAt: Date.now() });
       setZodErrors(null);
       Api.getUserPromise(user).then(user => {
         if(user){
@@ -43,7 +43,7 @@ function handleLogIn() {
     <div>
     <h1 className="text-center text-3xl font-semibold py-3 mt-28">Log in</h1>
     
-    <form action="#" className='flex flex-col gap-3 w-96 mx-auto'>
+    <div className='flex flex-col gap-3 w-96 mx-auto'>
       
       <input
         className="pl-1 h-10 border-solid border-black border-2"
@@ -66,7 +66,7 @@ function handleLogIn() {
 
       <Link className="underline" to="/">Регистрация</Link>
       {invalidDataError && <h3 className="font-medium text-red-600">Invalid data</h3>}        
-    </form>
+    </div>
   </div>
   )
 }

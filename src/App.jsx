@@ -4,11 +4,12 @@ import Home from "./routes/Home";
 import Notes from "./routes/Notes";
 import CreateNote from "./routes/CreateNote";
 import EditNote from "./routes/EditNote";
-import Note from "./routes/Note";
+import Note from "./routes/ViewNote";
 import SignUp from "./routes/SignUp";
 import LogIn from "./routes/LogIn";
 import UserContextProvider from "./components/UserContextProvider";
 import RequireAuth from "./components/RequireAuth";
+import NotFound from "./routes/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -21,14 +22,16 @@ const router = createBrowserRouter([
   },
   {
     path: '/',
-    element: <Layout />,
+    element: (
+      <RequireAuth>
+        <Layout />
+      </RequireAuth>
+    ),
     children: [
       {
         path: '/home',
         element: (
-          <RequireAuth>
-            <Home />
-          </RequireAuth>
+          <Home />
         )
       },
       {
@@ -36,18 +39,22 @@ const router = createBrowserRouter([
         element: <Notes />
       },
       {
-        path: 'notes/:id/create',
+        path: '/notes/create',
         element: <CreateNote />
       },
       {
-        path: 'notes/:id/edit',
+        path: '/notes/:id/edit',
         element: <EditNote />
       },
       {
-        path: 'notes/:id',
+        path: '/notes/:id/view',
         element: <Note />
       }
     ]
+  },
+  {
+    path: '*',
+    element: <NotFound />
   }
 ])
 

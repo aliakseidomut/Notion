@@ -17,7 +17,7 @@ function Layout() {
             <nav className="flex gap-4">
                 <NavLink className={({isActive}) => isActive ? `underline` : `hover:text-slate-500`} to="/home" end={true}>About</NavLink>
                 <NavLink className={({isActive}) => isActive ? `underline` : `hover:text-slate-500`} to="/notes" end={true}>Notes</NavLink>
-                <NavLink className={({isActive}) => isActive ? `underline` : `hover:text-slate-500`} to="/signup" end={true}>Log out</NavLink>
+                <NavLink className={({isActive}) => isActive ? `underline` : `hover:text-slate-500`} to="/login" end={true}>Log out</NavLink>
             </nav>
         </header>
         

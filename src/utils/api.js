@@ -6,7 +6,7 @@ export default class Api {
             .then(users => users[0])
     }
 
-    static createUser({email, password, date}) {
+    static createUser({email, password, createdAt}) {
         fetch('http://localhost:3000/users', {
             method: 'POST',
             headers: {
@@ -15,7 +15,51 @@ export default class Api {
             body: JSON.stringify({
                 email,
                 password,
-                date
+                createdAt
+            })
+        })
+    }
+
+    static getUserNotesPromise(userId) {
+        return fetch(`http://localhost:3000/notes?authorId=${userId}`)
+            .then(r => r.json())
+    }
+
+    static getNotePromise(id) {
+        return fetch(`http://localhost:3000/notes/${id}`)
+            .then(r => r.json())
+    }
+
+    static createNote({authorId, title, text, createdAt}) {
+        fetch('http://localhost:3000/notes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                authorId,
+                title,
+                text,
+                createdAt
+            })
+        })
+    }
+
+    static deleteNote(id) {
+        fetch(`http://localhost:3000/notes/${id}`, {method: 'DELETE'})
+    }
+
+    static editNote({id, authorId, title, text, createdAt}) {
+        fetch(`http://localhost:3000/notes/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                authorId,
+                title,
+                text,
+                createdAt
             })
         })
     }

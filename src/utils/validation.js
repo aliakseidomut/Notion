@@ -7,5 +7,5 @@ export const User = z.object({
   password: z.string().min(8, {message: "Длина пароля >= 8 символам;"}).refine((value) => passwordRegex.test(value), {
     message: `Пароль содержит хотя бы одну заглавную букву; Пароль содержит хотя бы одну строчную букву; Пароль содержит хотя бы одну цифру.`,
   }),
-  date: z.number(),
+  createdAt: z.number(),
 });

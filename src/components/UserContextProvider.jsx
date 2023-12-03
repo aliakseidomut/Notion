@@ -19,7 +19,9 @@ export default function UserContextProvider({ children }) {
                 setUser(user);
                 setLoading(false)
             })
-            .finally(() => setLoading(false))
+            .finally(() => {
+                setLoading(false)
+            })
         } else {
             setLoading(false);
         }

@@ -1,17 +1,4 @@
 {
-  "users": [
-    {
-      "email": "q@q.com",
-      "password": "111111As",
-      "createdAt": 1701623205663,
-      "id": 1
-    },
-    {
-      "email": "q1@q.com",
-      "password": "111111As",
-      "createdAt": 1701624386021,
-      "id": 2
-    }
-  ],
+  "users": [],
   "notes": []
 }

@@ -4,12 +4,11 @@ import Home from "./routes/Home";
 import Notes from "./routes/Notes";
 import CreateNote from "./routes/CreateNote";
 import EditNote from "./routes/EditNote";
-import Note from "./routes/ViewNote";
 import SignUp from "./routes/SignUp";
 import LogIn from "./routes/LogIn";
-import UserContextProvider from "./components/UserContextProvider";
 import RequireAuth from "./components/RequireAuth";
 import NotFound from "./routes/NotFound";
+import ViewNote from "./routes/ViewNote";
 
 const router = createBrowserRouter([
   {
@@ -48,7 +47,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/notes/:id/view',
-        element: <Note />
+        element: <ViewNote />
       }
     ]
   },
@@ -60,10 +59,8 @@ const router = createBrowserRouter([
 
 function App() {
   return(
-    <UserContextProvider>
-      <RouterProvider router={router} />
-    </UserContextProvider>
-  ) 
+    <RouterProvider router={router} />
+  )
 }
 
 export default App;

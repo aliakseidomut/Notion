@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom"
-import Api from "../utils/api";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux";
+import { selectNotes } from "../redux/notes/selectors";
+import { editNote } from "../redux/notes/actions";
 
 export default function EditNote() {
   const { id } = useParams();
+
+  const dispatch = useDispatch();
 
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
@@ -14,14 +18,14 @@ export default function EditNote() {
 
   const navigate = useNavigate();
 
+  const notes = useSelector(selectNotes);
+  const note = notes.filter(note => note.id !== id)[0];
+
   useEffect(() => {
-    Api.getNotePromise(id)
-      .then(note => {
-        setTitle(note.title);
-        setText(note.text);
-        setAuthorId(note.authorId);
-        setCreatedAt(note.createdAt);
-      })
+    setTitle(note.title);
+    setText(note.text);
+    setAuthorId(note.authorId);
+    setCreatedAt(note.createdAt);
   }, [id])
 
   const handleSave = () => {
@@ -33,12 +37,14 @@ export default function EditNote() {
 
     setError(false);
 
-    Api.editNote({id, authorId, title, text, createdAt})
-
-    Api.getUserNotesPromise(localStorage.getItem("userId"))
-      .then(() => navigate(`/notes/${id}/view`))
+    dispatch(editNote({id, authorId, title, text, createdAt})); 
+    navigate('/notes');
   }
 
+  if (!note) {
+    return <Navigate to="*" replace />
+  }
+  
   return (
     <div>
       <header className="flex">

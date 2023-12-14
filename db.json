@@ -1,11 +1,6 @@
 {
   "users": [
-    {
-      "email": "r@gmail.com",
-      "password": "123456Qw",
-      "createdAt": 1701626299580,
-      "id": 1
-    }
   ],
-  "notes": []
+  "notes": [
+  ]
 }

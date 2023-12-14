@@ -1,8 +1,10 @@
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom"
+import { selectUserId } from "../redux/user/selectors";
 
 export default function NotFound() {
-  const link = localStorage.getItem("userId") ? "/home" : "login";
-  const linkText = localStorage.getItem("userId") ? "Home" : "LogIn";
+  const link = useSelector(selectUserId) ? "/home" : "/login";
+  const linkText = useSelector(selectUserId) ? "Home" : "LogIn";
 
   return (
     <div className="flex flex-col">

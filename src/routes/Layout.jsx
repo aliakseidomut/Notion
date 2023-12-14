@@ -1,10 +1,11 @@
-import { useContext } from "react";
+import { useSelector } from "react-redux";
 import { NavLink, Outlet } from "react-router-dom";
-import { UserContext } from "../components/UserContextProvider";
+import { selectUser, selectUserLoading } from "../redux/user/selectors";
 
 function Layout() {
-    const { user, loading } = useContext(UserContext);
-    
+    const user = useSelector(selectUser);
+    const loading = useSelector(selectUserLoading);
+
     if(loading){
         return <div>Loading...</div>
     }

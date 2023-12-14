@@ -1,18 +1,24 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import Api from "../utils/api";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUserId } from "../redux/user/selectors";
+import { createNote } from "../redux/notes/actions";
 
 export default function CreateNote() {
+  const dispatch = useDispatch();
+  
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
   
   const [error, setError] = useState(null);
 
+  const authorId = useSelector(selectUserId);
+
   const navigate = useNavigate();
 
   const handleCreate = () => {
     const note = {
-      authorId: localStorage.getItem("userId"),
+      authorId,
       title,
       text,
       createdAt: Date.now()
@@ -25,10 +31,8 @@ export default function CreateNote() {
 
     setError(false);
 
-    Api.createNote(note)
-
-    Api.getUserNotesPromise(localStorage.getItem("userId"))
-      .then(notes => navigate(`/notes/${notes.at(-1).id}/view`))
+    dispatch(createNote(note));
+    navigate('/notes');
   }
 
   return (

@@ -1,10 +1,11 @@
-import { useContext } from 'react'
-import { UserContext } from './UserContextProvider';
 import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectUser, selectUserLoading } from '../redux/user/selectors';
 
 export default function RequireAuth({ children }) {
-    const { user, loading } = useContext(UserContext)
-    
+    const user = useSelector(selectUser);
+    const loading = useSelector(selectUserLoading);
+
     if (loading) {
         return <div>Loading...</div>
     }

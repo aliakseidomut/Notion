@@ -38,8 +38,6 @@ export default function SignUp() {
         setIsPasswordsEquals(true);
       }
 
-      console.log("Все норм");
-
       Api.createUser(user);
 
       navigate("/login");

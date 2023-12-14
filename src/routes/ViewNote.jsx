@@ -1,21 +1,22 @@
-import { Link, useNavigate, useParams } from "react-router-dom"
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom"
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
-import { useState } from "react";
-import Api from "../utils/api";
+import { useDispatch, useSelector } from "react-redux";
+import { selectNotes } from "../redux/notes/selectors";
+import { deleteNote } from "../redux/notes/actions";
 
 export default function ViewNote() {
   const { id } = useParams();
   
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState('');
-  const [text, setText] = useState('');
+  const dispatch = useDispatch();
 
-  Api.getNotePromise(id)
-    .then(note => {
-      setTitle(note.title);
-      setText(note.text)
-    })
+  const notes = useSelector(selectNotes);
+  const note = notes.filter(note => note.id === +id)[0];
+
+  if (!note) {
+    return <Navigate to="*" replace />
+  }
 
   return (
     <div>
@@ -27,7 +28,7 @@ export default function ViewNote() {
           Back
         </Link>
         <h1 className="text-center text-2xl font-semibold mt-5 mb-3 mx-auto">
-          {title}
+          {note.title}
         </h1>      
         <div className="flex gap-3 items-center">
           <Link to={`/notes/${id}/edit`}>
@@ -35,7 +36,7 @@ export default function ViewNote() {
           </Link>
           <button 
             onClick={() => {
-              Api.deleteNote(id); 
+              dispatch(deleteNote(id)); 
               navigate('/notes')
             }}
           >
@@ -44,7 +45,7 @@ export default function ViewNote() {
         </div>
       </header>
       <p className="bg-slate-400 p-3">
-        {text}
+        {note.text}
       </p>
     </div>
   )

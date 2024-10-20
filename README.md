@@ -11,14 +11,14 @@
   
 ## Functionality
 - Register/Login
-- Add/Edit/Delete Notes
+- Add/Edit/Delete notes
   
 ## Script for launching
-###Client
+### Client
 ```
 npm run dev
 ```
-###Server
+### Server
 ```
 npm run dev-db
 ```
